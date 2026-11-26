@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3rd Birthday Party Invitation - LEGO Theme</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Fredoka (playful rounded display) & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"Fredoka"', 'cursive', 'sans-serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            lego: {
+              yellow: '#FFD500',
+              yellowDark: '#E5BE00',
+              blue: '#0055BF',
+              blueDark: '#003F8F',
+              red: '#D9232E',
+              redDark: '#B01922',
+              green: '#00852B',
+              greenDark: '#006621',
+              cream: '#FFFDF7',
+              sand: '#FFF6D8'
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /* Warm ivory background with subtle LEGO stud baseplate texture */
+    body {
+      background-color: #FFFDF7;
+      background-image: radial-gradient(#E6DFC5 1.75px, transparent 1.75px);
+      background-size: 24px 24px;
+      color: #1E293B;
+    }
+
+    /* 3D LEGO Brick tactile shadow */
+    .lego-brick {
+      box-shadow: 0 5px 0 rgba(15, 23, 42, 0.16), inset 0 2px 0 rgba(255, 255, 255, 0.45);
+    }
+
+    .lego-btn {
+      box-shadow: 0 4px 0 rgba(0, 0, 0, 0.24), inset 0 2px 0 rgba(255, 255, 255, 0.35);
+      transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.15s ease;
+    }
+    .lego-btn:hover:not(:disabled) {
+      transform: translateY(-1px);
+    }
+    .lego-btn:active:not(:disabled) {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.24);
+    }
+
+    /* Top LEGO brick studs */
+    .lego-stud {
+      height: 11px;
+      border-radius: 5px 5px 0 0;
+      box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.55);
+    }
+
+    /* Ticket side notches */
+    .ticket-notch-left,
+    .ticket-notch-right {
+      position: absolute;
+      top: 52%;
+      width: 22px;
+      height: 22px;
+      background-color: #FFFDF7;
+      border-radius: 9999px;
+      transform: translateY(-50%);
+      z-index: 10;
+      pointer-events: none;
+    }
+    .ticket-notch-left {
+      left: -11px;
+      border-right: 3px solid #E2E8F0;
+    }
+    .ticket-notch-right {
+      right: -11px;
+      border-left: 3px solid #E2E8F0;
+    }
+
+    /* Stamp animation for ALREADY USED */
+    @keyframes stampSlam {
+      0% {
+        transform: scale(2.2) rotate(-16deg);
+        opacity: 0;
+      }
+      70% {
+        transform: scale(0.94) rotate(-8deg);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1) rotate(-8deg);
+        opacity: 1;
+      }
+    }
+
+    .stamp-used-badge {
+      animation: stampSlam 0.32s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      border: 3px double #D9232E;
+      color: #D9232E;
+      background-color: #FFF5F5;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.9rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 12px rgba(217, 35, 46, 0.18);
+      display: inline-block;
+      transform: rotate(-8deg);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between antialiased selection:bg-lego-yellow selection:text-lego-blue">
+
+  <!-- TOP HEADER BAR -->
+  <header class="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b-2 border-amber-200/80 px-4 py-2.5">
+    <div class="max-w-xl mx-auto flex items-center justify-between gap-2">
+      <div class="flex items-center gap-2">
+        <span class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-lego-red text-white font-display font-bold text-sm shadow-sm">
+          3
+        </span>
+        <span class="text-xs font-extrabold tracking-wider text-lego-blue uppercase">
+          LEGO Birthday Pass
+        </span>
+      </div>
+
+      <!-- Hidden by default; revealed ONLY when ?admin=1 is in the URL -->
+      <button id="toggleAdminBtn" type="button"
+        class="hidden px-3.5 py-1.5 rounded-xl bg-lego-blue hover:bg-lego-blueDark text-white text-xs font-bold shadow-sm transition items-center gap-1.5 cursor-pointer">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+        </svg>
+        <span>Guest Link Generator</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- HIDDEN ADMIN GENERATOR PANEL (?admin=1 only) -->
+  <section id="adminPanel" class="hidden max-w-xl w-full mx-auto px-4 pt-4 relative z-30">
+    <div class="bg-white border-4 border-lego-blue rounded-3xl p-5 shadow-xl space-y-3.5">
+      <div class="flex items-center justify-between border-b border-slate-200 pb-2.5">
+        <div>
+          <span class="text-[10px] font-extrabold uppercase tracking-wider text-lego-red">Host Admin Mode</span>
+          <h2 class="font-display text-lg font-bold text-lego-blue">Guest Link Generator</h2>
+        </div>
+        <button id="closeAdminBtn" type="button" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold cursor-pointer">
+          Close ✕
+        </button>
+      </div>
+
+      <p class="text-xs text-slate-600 leading-relaxed">
+        Type a guest's name below to preview their card or copy a clean shareable link (without admin controls).
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-2">
+        <input id="guestInput" type="text" placeholder="e.g. Leo & Family"
+          class="flex-1 bg-slate-50 border-2 border-slate-300 focus:border-lego-blue rounded-xl px-3.5 py-2.5 text-sm font-semibold text-slate-800 outline-none" />
+        <button id="previewGuestBtn" type="button"
+          class="px-4 py-2.5 rounded-xl bg-lego-yellow hover:bg-lego-yellowDark text-slate-900 font-bold text-xs sm:text-sm border-2 border-amber-400 transition cursor-pointer whitespace-nowrap">
+          Preview Guest
+        </button>
+      </div>
+
+      <!-- Shareable Clean URL -->
+      <div class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-3 space-y-2">
+        <label class="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500">
+          Clean Shareable Guest URL:
+        </label>
+        <div class="flex flex-col sm:flex-row gap-2">
+          <input id="generatedUrlInput" type="text" readonly
+            class="flex-1 bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs font-mono text-slate-700 outline-none" />
+          <div class="flex gap-2">
+            <button id="copyUrlBtn" type="button"
+              class="flex-1 sm:flex-none px-3.5 py-2 rounded-xl bg-lego-green hover:bg-lego-greenDark text-white font-bold text-xs transition cursor-pointer">
+              Copy Link
+            </button>
+            <a id="shareWaBtn" href="#" target="_blank" rel="noopener noreferrer"
+              class="flex-1 sm:flex-none px-3.5 py-2 rounded-xl bg-[#25D366] hover:bg-[#1ebe5d] text-white font-bold text-xs transition text-center">
+              WhatsApp
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reset Coupons Button -->
+      <div class="pt-2 border-t border-slate-200 flex items-center justify-between gap-2">
+        <span class="text-[11px] text-slate-500">Reset current guest's coupons for testing:</span>
+        <button id="resetCouponsBtn" type="button"
+          class="px-3 py-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-lego-red border border-red-200 text-xs font-bold transition cursor-pointer">
+          Reset Coupons
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <main class="max-w-xl w-full mx-auto px-4 py-6 sm:py-8 space-y-7 relative z-10">
+
+    <!-- 1. MAIN INVITATION CARD -->
+    <section class="relative">
+      <!-- Top LEGO Studs -->
+      <div class="grid grid-cols-6 gap-2.5 px-6">
+        <div class="lego-stud bg-lego-red"></div>
+        <div class="lego-stud bg-lego-yellow"></div>
+        <div class="lego-stud bg-lego-blue"></div>
+        <div class="lego-stud bg-lego-green"></div>
+        <div class="lego-stud bg-lego-yellow"></div>
+        <div class="lego-stud bg-lego-red"></div>
+      </div>
+
+      <!-- Card Body -->
+      <div class="relative bg-white rounded-[2rem] border-[6px] border-lego-yellow shadow-[0_14px_35px_rgba(0,85,191,0.14)] p-6 sm:p-8 text-center overflow-hidden">
+
+        <!-- Decorative Corner Bricks (pointer-events-none so they never block clicks) -->
+        <div class="hidden sm:block absolute -top-2 -left-2 w-12 h-8 bg-lego-blue rounded-lg rotate-12 opacity-90 shadow-md pointer-events-none"></div>
+        <div class="hidden sm:block absolute top-6 -right-3 w-11 h-7 bg-lego-red rounded-lg -rotate-12 opacity-90 shadow-md pointer-events-none"></div>
+
+        <!-- Boy LEGO Minifigure Illustration & Number 3 Badge -->
+        <div class="relative inline-flex flex-col items-center mb-2">
+          <div class="relative flex items-center justify-center">
+            <svg class="w-28 h-28 sm:w-32 sm:h-32 drop-shadow-md" viewBox="0 0 140 140" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Boy LEGO Minifigure">
+              <!-- Waving Left Arm -->
+              <path d="M36 86 C22 76, 20 58, 28 48" stroke="#0055BF" stroke-width="13" stroke-linecap="round"/>
+              <path d="M22 47 C18 41, 23 33, 30 35 C35 36, 36 43, 32 48" stroke="#FFD500" stroke-width="6" stroke-linecap="round" fill="none"/>
+              <!-- Right Arm -->
+              <path d="M104 86 C116 94, 118 106, 112 114" stroke="#0055BF" stroke-width="13" stroke-linecap="round"/>
+              <circle cx="111" cy="116" r="6" fill="#FFD500"/>
+              <!-- Blue LEGO Torso -->
+              <path d="M44 78 L96 78 L103 122 L37 122 Z" fill="#0055BF"/>
+              <path d="M44 78 L96 78 L98 86 L42 86 Z" fill="#0066E6"/>
+              <!-- Neck -->
+              <rect x="61" y="69" width="18" height="10" rx="3" fill="#E5BE00"/>
+              <!-- Head Stud -->
+              <rect x="57" y="16" width="26" height="9" rx="3" fill="#FFD500"/>
+              <!-- Yellow LEGO Head -->
+              <rect x="44" y="23" width="52" height="48" rx="14" fill="#FFD500"/>
+              <rect x="47" y="26" width="10" height="40" rx="5" fill="#FFE666" opacity="0.65"/>
+              <!-- Boy Brown Hair -->
+              <path d="M42 34 C40 16, 56 10, 72 11 C88 12, 100 19, 98 34 C94 27, 86 25, 78 27 C70 23, 58 23, 50 28 C46 27, 43 30, 42 34 Z" fill="#5C3A21"/>
+              <path d="M52 15 C58 8, 72 7, 80 13" stroke="#7A4E2D" stroke-width="3" stroke-linecap="round"/>
+              <!-- Eyes & Smile -->
+              <path d="M54 39 Q58 36 62 39" stroke="#1E293B" stroke-width="2.2" stroke-linecap="round"/>
+              <path d="M78 39 Q82 36 86 39" stroke="#1E293B" stroke-width="2.2" stroke-linecap="round"/>
+              <circle cx="58" cy="46" r="3.5" fill="#1E293B"/>
+              <circle cx="82" cy="46" r="3.5" fill="#1E293B"/>
+              <circle cx="59" cy="45" r="1.2" fill="#FFFFFF"/>
+              <circle cx="83" cy="45" r="1.2" fill="#FFFFFF"/>
+              <path d="M58 55 Q70 66 82 55 Z" fill="#1E293B"/>
+              <path d="M63 60 Q70 64 77 60" stroke="#D9232E" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+
+            <!-- Number 3 Brick Badge -->
+            <div class="-ml-3 mt-4 px-3.5 py-1.5 rounded-2xl bg-lego-blue border-4 border-white shadow-lg transform rotate-6 flex flex-col items-center">
+              <span class="text-[9px] font-extrabold uppercase tracking-wider text-lego-yellow leading-none">TURNING</span>
+              <span class="font-display text-3xl font-bold text-white leading-none drop-shadow">3</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Personalized Guest Box -->
+        <div class="space-y-2">
+          <p class="font-display text-base sm:text-lg font-bold text-lego-blue">
+            Hey, Builder!
+          </p>
+
+          <div class="bg-lego-sand border-2 border-dashed border-lego-yellowDark rounded-2xl px-5 py-3.5 max-w-md mx-auto">
+            <span class="block text-[11px] font-extrabold uppercase tracking-widest text-amber-800/80 mb-0.5">
+              SPECIAL INVITATION FOR:
+            </span>
+            <h2 id="guestNameDisplay" class="font-display text-2xl sm:text-3xl font-bold text-lego-blue break-words leading-snug">
+              Special Guest
+            </h2>
+            <span id="guestTicketBadge" class="inline-block mt-1.5 px-3 py-0.5 rounded-full bg-white text-[11px] font-mono font-bold text-lego-red border border-amber-300">
+              GUEST ID: BRICK-0000
+            </span>
+          </div>
+        </div>
+
+        <!-- Birthday Title -->
+        <div class="mt-5 space-y-1.5">
+          <p class="font-display text-sm sm:text-base font-semibold text-lego-blue/90">
+            Come stack, play, and celebrate at
+          </p>
+          <h1 id="eventTitle" class="font-display text-3xl sm:text-4xl font-bold text-lego-blue tracking-tight leading-tight">
+            Rafa's 3rd Birthday Party!
+          </h1>
+          <p class="text-xs sm:text-sm text-slate-600 max-w-md mx-auto pt-1 leading-relaxed">
+            Join us for brick-building fun, games, cake, and yummy treats as we celebrate turning three!
+          </p>
+        </div>
+
+        <!-- Event Details (No RSVP) -->
+        <div class="mt-6 bg-lego-sand/90 border-2 border-amber-300/80 rounded-2xl p-4 sm:p-5 space-y-3.5 text-left max-w-md mx-auto">
+          <!-- Date -->
+          <div class="flex items-center gap-3.5">
+            <div class="w-10 h-10 rounded-xl bg-lego-red text-white flex items-center justify-center shrink-0 shadow-sm">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <div>
+              <span class="block text-[10px] font-extrabold uppercase tracking-wider text-lego-red">Date</span>
+              <p id="eventDate" class="font-display text-base sm:text-lg font-bold text-lego-blue leading-tight">
+                Saturday, December 19, 2026
+              </p>
+            </div>
+          </div>
+
+          <div class="border-t border-amber-300/70"></div>
+
+          <!-- Time -->
+          <div class="flex items-center gap-3.5">
+            <div class="w-10 h-10 rounded-xl bg-lego-blue text-white flex items-center justify-center shrink-0 shadow-sm">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div>
+              <span class="block text-[10px] font-extrabold uppercase tracking-wider text-lego-blue">Time</span>
+              <p id="eventTime" class="font-display text-base sm:text-lg font-bold text-lego-blue leading-tight">
+                4:30 PM
+              </p>
+            </div>
+          </div>
+
+          <div class="border-t border-amber-300/70"></div>
+
+          <!-- Venue -->
+          <div class="flex items-center gap-3.5">
+            <div class="w-10 h-10 rounded-xl bg-lego-green text-white flex items-center justify-center shrink-0 shadow-sm">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </div>
+            <div>
+              <span class="block text-[10px] font-extrabold uppercase tracking-wider text-lego-green">Venue</span>
+              <p id="eventVenue" class="font-display text-base sm:text-lg font-bold text-lego-blue leading-tight">
+                Paradise Park 3 D1-11
+              </p>
+              <p id="eventAddress" class="text-xs font-medium text-slate-600 mt-0.5">
+                Kids Play & Party Lounge
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Closing Banner -->
+        <div class="mt-6">
+          <span class="inline-block px-7 py-2.5 rounded-full bg-lego-yellow text-lego-blue font-display font-bold text-base sm:text-lg shadow-sm border-2 border-amber-400">
+            See You Soon! 🎉
+          </span>
+        </div>
+      </div>
+
+      <!-- Bottom Colorful LEGO Bricks -->
+      <div class="grid grid-cols-4 gap-2 px-4 -mt-3 relative z-10 pointer-events-none">
+        <div class="h-6 rounded-xl bg-lego-blue lego-brick"></div>
+        <div class="h-6 rounded-xl bg-lego-yellow lego-brick"></div>
+        <div class="h-6 rounded-xl bg-lego-red lego-brick"></div>
+        <div class="h-6 rounded-xl bg-lego-green lego-brick"></div>
+      </div>
+    </section>
+
+    <!-- 2. TWO SINGLE-USE DIGITAL COUPONS -->
+    <section class="space-y-4 relative z-20">
+      <div class="text-center space-y-1">
+        <span class="inline-block px-3.5 py-1 rounded-full bg-lego-blue text-white text-[11px] font-extrabold uppercase tracking-widest shadow-sm">
+          Party E-Coupons
+        </span>
+        <h3 class="font-display text-2xl font-bold text-lego-blue">
+          Food & Drink Tickets
+        </h3>
+        <p class="text-xs sm:text-sm text-slate-600 max-w-md mx-auto">
+          Present these tickets at the refreshment counter. Each coupon is valid for <strong class="text-lego-red">one-time redemption only</strong>.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 gap-4">
+
+        <!-- COUPON 1: FOOD COUPON -->
+        <article id="card-food" class="relative bg-white rounded-3xl border-4 border-lego-yellow shadow-lg overflow-hidden transition-all">
+          <div class="ticket-notch-left"></div>
+          <div class="ticket-notch-right"></div>
+
+          <!-- Header -->
+          <div class="bg-lego-yellow px-5 py-3 flex items-center justify-between border-b-2 border-amber-400">
+            <div class="flex items-center gap-2.5">
+              <span class="w-8 h-8 rounded-xl bg-lego-red text-white flex items-center justify-center text-lg shadow-sm">🍔</span>
+              <div>
+                <span class="block text-[10px] font-extrabold uppercase tracking-wider text-amber-900">Ticket #01 • Main Meal & Cake Box</span>
+                <h4 class="font-display text-lg font-bold text-lego-blue leading-none">Food Coupon</h4>
+              </div>
+            </div>
+            <span class="px-2.5 py-1 rounded-lg bg-lego-red text-white font-mono text-xs font-extrabold shadow-sm">
+              1x USE
+            </span>
+          </div>
+
+          <!-- Body -->
+          <div class="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-20">
+            <div class="space-y-1">
+              <p class="text-xs text-slate-500 font-semibold">Guest Name:</p>
+              <p class="coupon-owner font-display text-lg font-bold text-slate-800">Special Guest</p>
+              <p id="code-food" class="inline-block text-xs font-mono font-bold text-lego-red bg-red-50 px-2.5 py-0.5 rounded-md border border-red-200">
+                CODE: FOOD-0000
+              </p>
+            </div>
+
+            <button id="btn-food" type="button"
+              class="lego-btn relative z-30 pointer-events-auto w-full sm:w-auto px-5 py-3 rounded-2xl bg-lego-red hover:bg-lego-redDark text-white font-display font-bold text-sm tracking-wide cursor-pointer">
+              Redeem Coupon
+            </button>
+          </div>
+
+          <!-- Redeemed Stamp Banner (Shown after redemption) -->
+          <div id="stamp-food" class="hidden px-5 pb-5 pt-2 border-t-2 border-dashed border-slate-200 flex flex-wrap items-center justify-between gap-2 bg-slate-50/80">
+            <span class="stamp-used-badge text-xs sm:text-sm">ALREADY USED</span>
+            <span id="time-food" class="text-xs font-mono font-bold text-slate-600"></span>
+          </div>
+        </article>
+
+        <!-- COUPON 2: DRINK COUPON -->
+        <article id="card-drink" class="relative bg-white rounded-3xl border-4 border-lego-blue shadow-lg overflow-hidden transition-all">
+          <div class="ticket-notch-left"></div>
+          <div class="ticket-notch-right"></div>
+
+          <!-- Header -->
+          <div class="bg-lego-blue px-5 py-3 flex items-center justify-between border-b-2 border-blue-800 text-white">
+            <div class="flex items-center gap-2.5">
+              <span class="w-8 h-8 rounded-xl bg-lego-green text-white flex items-center justify-center text-lg shadow-sm">🧃</span>
+              <div>
+                <span class="block text-[10px] font-extrabold uppercase tracking-wider text-blue-200">Ticket #02 • Refreshment & Juice Bar</span>
+                <h4 class="font-display text-lg font-bold text-white leading-none">Drink Coupon</h4>
+              </div>
+            </div>
+            <span class="px-2.5 py-1 rounded-lg bg-lego-green text-white font-mono text-xs font-extrabold shadow-sm">
+              1x USE
+            </span>
+          </div>
+
+          <!-- Body -->
+          <div class="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-20">
+            <div class="space-y-1">
+              <p class="text-xs text-slate-500 font-semibold">Guest Name:</p>
+              <p class="coupon-owner font-display text-lg font-bold text-slate-800">Special Guest</p>
+              <p id="code-drink" class="inline-block text-xs font-mono font-bold text-lego-blue bg-blue-50 px-2.5 py-0.5 rounded-md border border-blue-200">
+                CODE: DRINK-0000
+              </p>
+            </div>
+
+            <button id="btn-drink" type="button"
+              class="lego-btn relative z-30 pointer-events-auto w-full sm:w-auto px-5 py-3 rounded-2xl bg-lego-green hover:bg-lego-greenDark text-white font-display font-bold text-sm tracking-wide cursor-pointer">
+              Redeem Coupon
+            </button>
+          </div>
+
+          <!-- Redeemed Stamp Banner (Shown after redemption) -->
+          <div id="stamp-drink" class="hidden px-5 pb-5 pt-2 border-t-2 border-dashed border-slate-200 flex flex-wrap items-center justify-between gap-2 bg-slate-50/80">
+            <span class="stamp-used-badge text-xs sm:text-sm">ALREADY USED</span>
+            <span id="time-drink" class="text-xs font-mono font-bold text-slate-600"></span>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="text-center py-5 px-4 text-xs text-slate-500">
+    <p>Please tap <strong>"Redeem Coupon"</strong> only when you are at the refreshment counter.</p>
+  </footer>
+
+  <!-- HIGH-Z-INDEX CONFIRMATION MODAL -->
+  <div id="confirmModal" class="hidden fixed inset-0 z-50 bg-slate-900/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white border-4 border-lego-yellow rounded-3xl max-w-sm w-full p-6 shadow-2xl text-center space-y-4">
+      <div class="w-14 h-14 rounded-2xl bg-lego-sand border-2 border-lego-yellow text-3xl flex items-center justify-center mx-auto">
+        🎟️
+      </div>
+      <div class="space-y-1.5">
+        <h3 class="font-display text-xl font-bold text-lego-blue">Confirm Redemption</h3>
+        <p id="confirmModalDesc" class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+          Are you sure you want to redeem this coupon? Once confirmed, this coupon is permanently locked and cannot be clicked again.
+        </p>
+      </div>
+      <div class="grid grid-cols-2 gap-2.5 pt-1">
+        <button id="cancelModalBtn" type="button"
+          class="py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs sm:text-sm transition cursor-pointer">
+          Cancel
+        </button>
+        <button id="confirmUseBtn" type="button"
+          class="lego-btn py-2.5 px-4 rounded-xl bg-lego-green hover:bg-lego-greenDark text-white font-display font-bold text-xs sm:text-sm cursor-pointer">
+          Confirm
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+    <div class="bg-lego-blue text-white px-4 py-3 rounded-2xl shadow-xl border-2 border-lego-yellow flex items-center gap-2 text-xs sm:text-sm font-bold">
+      <span id="toastEmoji">🧱</span>
+      <span id="toastText">Success!</span>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================
+    // 1. EVENT CONFIGURATION (Customize your party details here)
+    // =========================================================
+    const EVENT_CONFIG = {
+      childName: "Rafa",
+      age: 3,
+      title: "Rafa's 3rd Birthday Party!",
+      date: "Saturday, December 19, 2026",
+      time: "4:30 PM",
+      venue: "Paradise Park 3 D1-11",
+      address: "Kids Play & Party Lounge"
+    };
+
+    document.getElementById("eventTitle").textContent = EVENT_CONFIG.title;
+    document.getElementById("eventDate").textContent = EVENT_CONFIG.date;
+    document.getElementById("eventTime").textContent = EVENT_CONFIG.time;
+    document.getElementById("eventVenue").textContent = EVENT_CONFIG.venue;
+    document.getElementById("eventAddress").textContent = EVENT_CONFIG.address;
+
+    // =========================================================
+    // 2. READ URL PARAMETERS (?to=Guest+Name & ?admin=1)
+    // =========================================================
+    const DEFAULT_GUEST = "Special Guest";
+    const urlParams = new URLSearchParams(window.location.search);
+    const rawTo = urlParams.get("to");
+    const isAdminMode = urlParams.get("admin") === "1";
+    let currentGuestName = rawTo && rawTo.trim() !== "" ? rawTo.trim() : DEFAULT_GUEST;
+
+    // Generate deterministic 4-character ID per guest name
+    function generateTicketHash(name) {
+      let hash = 0;
+      const clean = name.trim().toUpperCase();
+      for (let i = 0; i < clean.length; i++) {
+        hash = ((hash << 5) - hash) + clean.charCodeAt(i);
+        hash |= 0;
+      }
+      return Math.abs(hash).toString(36).toUpperCase().padStart(4, "0").slice(0, 4);
+    }
+
+    function getStorageKey(guestName, couponType) {
+      const slug = guestName.trim().toLowerCase().replace(/[^a-z0-9]+/g, "_") || "special_guest";
+      return `lego_bday3_${slug}_${couponType}`;
+    }
+
+    function formatTimestampWIB(isoString) {
+      const date = new Date(isoString);
+      return date.toLocaleString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+      }) + " WIB";
+    }
+
+    // Toast Notification Helper
+    let toastTimer = null;
+    function showToast(message, emoji = "🧱") {
+      const toastEl = document.getElementById("toast");
+      document.getElementById("toastText").textContent = message;
+      document.getElementById("toastEmoji").textContent = emoji;
+      toastEl.classList.remove("translate-y-24", "opacity-0");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toastEl.classList.add("translate-y-24", "opacity-0");
+      }, 2600);
+    }
+
+    // =========================================================
+    // 3. COUPON STATE & INTERACTIVE REDEMPTION LOGIC
+    // =========================================================
+    let pendingCouponType = null;
+
+    function setCouponAvailableUI(type) {
+      const card = document.getElementById(`card-${type}`);
+      const btn = document.getElementById(`btn-${type}`);
+      const stamp = document.getElementById(`stamp-${type}`);
+
+      card.classList.remove("opacity-80");
+      stamp.classList.add("hidden");
+
+      btn.disabled = false;
+      btn.textContent = "Redeem Coupon";
+      if (type === "food") {
+        btn.className = "lego-btn relative z-30 pointer-events-auto w-full sm:w-auto px-5 py-3 rounded-2xl bg-lego-red hover:bg-lego-redDark text-white font-display font-bold text-sm tracking-wide cursor-pointer";
+      } else {
+        btn.className = "lego-btn relative z-30 pointer-events-auto w-full sm:w-auto px-5 py-3 rounded-2xl bg-lego-green hover:bg-lego-greenDark text-white font-display font-bold text-sm tracking-wide cursor-pointer";
+      }
+    }
+
+    function setCouponUsedUI(type, usedAtIso) {
+      const card = document.getElementById(`card-${type}`);
+      const btn = document.getElementById(`btn-${type}`);
+      const stamp = document.getElementById(`stamp-${type}`);
+      const timeLabel = document.getElementById(`time-${type}`);
+
+      card.classList.add("opacity-80");
+      btn.disabled = true;
+      btn.textContent = "Used";
+      btn.className = "relative z-30 w-full sm:w-auto px-5 py-3 rounded-2xl bg-slate-200 text-slate-500 border-2 border-slate-300 font-display font-bold text-sm tracking-wide cursor-not-allowed";
+
+      stamp.classList.remove("hidden");
+      timeLabel.textContent = `Redeemed: ${formatTimestampWIB(usedAtIso)}`;
+    }
+
+    function renderGuestAndCoupons() {
+      const code = generateTicketHash(currentGuestName);
+
+      // Update guest name and IDs
+      document.getElementById("guestNameDisplay").textContent = currentGuestName;
+      document.getElementById("guestTicketBadge").textContent = `GUEST ID: BRICK-${code}`;
+      document.getElementById("code-food").textContent = `CODE: FOOD-${code}`;
+      document.getElementById("code-drink").textContent = `CODE: DRINK-${code}`;
+
+      document.querySelectorAll(".coupon-owner").forEach(el => {
+        el.textContent = currentGuestName;
+      });
+
+      // Check localStorage status for food and drink coupons
+      ["food", "drink"].forEach(type => {
+        const saved = localStorage.getItem(getStorageKey(currentGuestName, type));
+        if (saved) {
+          try {
+            const data = JSON.parse(saved);
+            if (data && data.used && data.usedAt) {
+              setCouponUsedUI(type, data.usedAt);
+              return;
+            }
+          } catch (e) {}
+        }
+        setCouponAvailableUI(type);
+      });
+    }
+
+    function openConfirmModal(type) {
+      // Prevent opening if already redeemed
+      const saved = localStorage.getItem(getStorageKey(currentGuestName, type));
+      if (saved) return;
+
+      pendingCouponType = type;
+      const couponTitle = type === "food" ? "Food Coupon" : "Drink Coupon";
+      document.getElementById("confirmModalDesc").innerHTML =
+        `Are you sure you want to redeem <strong>${couponTitle}</strong> for <strong>${currentGuestName}</strong>? Once confirmed, this coupon is permanently locked and cannot be clicked again.`;
+      document.getElementById("confirmModal").classList.remove("hidden");
+    }
+
+    // Bind click listeners directly to both coupon buttons
+    document.getElementById("btn-food").addEventListener("click", () => openConfirmModal("food"));
+    document.getElementById("btn-drink").addEventListener("click", () => openConfirmModal("drink"));
+
+    document.getElementById("cancelModalBtn").addEventListener("click", () => {
+      pendingCouponType = null;
+      document.getElementById("confirmModal").classList.add("hidden");
+    });
+
+    document.getElementById("confirmUseBtn").addEventListener("click", () => {
+      if (!pendingCouponType) return;
+      const nowIso = new Date().toISOString();
+      const key = getStorageKey(currentGuestName, pendingCouponType);
+
+      localStorage.setItem(key, JSON.stringify({
+        used: true,
+        usedAt: nowIso,
+        guest: currentGuestName,
+        type: pendingCouponType
+      }));
+
+      setCouponUsedUI(pendingCouponType, nowIso);
+      const label = pendingCouponType === "food" ? "Food Coupon" : "Drink Coupon";
+      showToast(`${label} redeemed!`, "✅");
+
+      pendingCouponType = null;
+      document.getElementById("confirmModal").classList.add("hidden");
+    });
+
+    // =========================================================
+    // 4. HIDDEN ADMIN PANEL (?admin=1 ONLY)
+    // =========================================================
+    const toggleAdminBtn = document.getElementById("toggleAdminBtn");
+    const adminPanel = document.getElementById("adminPanel");
+    const guestInput = document.getElementById("guestInput");
+    const generatedUrlInput = document.getElementById("generatedUrlInput");
+    const shareWaBtn = document.getElementById("shareWaBtn");
+
+    if (isAdminMode) {
+      toggleAdminBtn.classList.remove("hidden");
+      toggleAdminBtn.classList.add("flex");
+    }
+
+    function getCleanBaseUrl() {
+      return window.location.href.split("#")[0].split("?")[0];
+    }
+
+    function updateShareableUrl(nameVal) {
+      const cleanName = (nameVal || "").trim();
+      const base = getCleanBaseUrl();
+      const shareUrl = cleanName
+        ? `${base}?to=${encodeURIComponent(cleanName).replace(/%20/g, "+")}`
+        : base;
+
+      generatedUrlInput.value = shareUrl;
+
+      const displayGuest = cleanName || DEFAULT_GUEST;
+      const waMessage = `Hi *${displayGuest}*! 🎉\n\nYou're invited to *${EVENT_CONFIG.childName}'s ${EVENT_CONFIG.age}rd Birthday Party* (LEGO Theme)!\n\nOpen your personalized invitation & food/drink coupons here:\n${shareUrl}`;
+      shareWaBtn.href = `https://wa.me/?text=${encodeURIComponent(waMessage)}`;
+    }
+
+    toggleAdminBtn.addEventListener("click", () => {
+      if (!isAdminMode) return;
+      adminPanel.classList.toggle("hidden");
+      guestInput.value = currentGuestName === DEFAULT_GUEST ? "" : currentGuestName;
+      updateShareableUrl(guestInput.value);
+    });
+
+    document.getElementById("closeAdminBtn").addEventListener("click", () => {
+      adminPanel.classList.add("hidden");
+    });
+
+    guestInput.addEventListener("input", (e) => {
+      updateShareableUrl(e.target.value);
+    });
+
+    document.getElementById("previewGuestBtn").addEventListener("click", () => {
+      const nextName = guestInput.value.trim() || DEFAULT_GUEST;
+      currentGuestName = nextName;
+      renderGuestAndCoupons();
+      updateShareableUrl(nextName === DEFAULT_GUEST ? "" : nextName);
+
+      try {
+        const nextUrl = new URL(window.location.href);
+        if (nextName === DEFAULT_GUEST) {
+          nextUrl.searchParams.delete("to");
+        } else {
+          nextUrl.searchParams.set("to", nextName);
+        }
+        nextUrl.searchParams.set("admin", "1");
+        window.history.replaceState({}, "", nextUrl.toString());
+      } catch (e) {}
+
+      showToast(`Previewing: ${currentGuestName}`, "👤");
+    });
+
+    document.getElementById("copyUrlBtn").addEventListener("click", () => {
+      generatedUrlInput.select();
+      generatedUrlInput.setSelectionRange(0, 99999);
+      try {
+        document.execCommand("copy");
+        showToast("Clean guest link copied!", "📋");
+      } catch (e) {
+        showToast("Please copy the URL manually.", "ℹ️");
+      }
+    });
+
+    document.getElementById("resetCouponsBtn").addEventListener("click", () => {
+      localStorage.removeItem(getStorageKey(currentGuestName, "food"));
+      localStorage.removeItem(getStorageKey(currentGuestName, "drink"));
+      renderGuestAndCoupons();
+      showToast(`Coupons reset for ${currentGuestName}`, "🔄");
+    });
+
+    // Initial page render
+    renderGuestAndCoupons();
+  </script>
+</body>
+</html>
