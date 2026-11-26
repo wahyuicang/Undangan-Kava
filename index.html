@@ -82,6 +82,7 @@
       border-radius: 9999px;
       transform: translateY(-50%);
       z-index: 10;
+      pointer-events-none: none;
       pointer-events: none;
     }
     .ticket-notch-left {
@@ -129,7 +130,7 @@
 
   <!-- TOP HEADER BAR -->
   <header class="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b-2 border-amber-200/80 px-4 py-2.5">
-    <div class="max-w-xl mx-auto flex items-center justify-between gap-2">
+    <div class="max-w-2xl mx-auto flex items-center justify-between gap-2">
       <div class="flex items-center gap-2">
         <span class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-lego-red text-white font-display font-bold text-sm shadow-sm">
           3
@@ -143,73 +144,100 @@
       <button id="toggleAdminBtn" type="button"
         class="hidden px-3.5 py-1.5 rounded-xl bg-lego-blue hover:bg-lego-blueDark text-white text-xs font-bold shadow-sm transition items-center gap-1.5 cursor-pointer">
         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
         </svg>
-        <span>Guest Link Generator</span>
+        <span>Host Monitor & Guest List</span>
       </button>
     </div>
   </header>
 
-  <!-- HIDDEN ADMIN GENERATOR PANEL (?admin=1 only) -->
-  <section id="adminPanel" class="hidden max-w-xl w-full mx-auto px-4 pt-4 relative z-30">
-    <div class="bg-white border-4 border-lego-blue rounded-3xl p-5 shadow-xl space-y-3.5">
-      <div class="flex items-center justify-between border-b border-slate-200 pb-2.5">
+  <!-- HIDDEN HOST MONITORING & GUEST WHITELIST DASHBOARD (?admin=1 only) -->
+  <section id="adminPanel" class="hidden max-w-2xl w-full mx-auto px-4 pt-4 relative z-30">
+    <div class="bg-white border-4 border-lego-blue rounded-3xl p-5 shadow-xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-200 pb-3">
         <div>
-          <span class="text-[10px] font-extrabold uppercase tracking-wider text-lego-red">Host Admin Mode</span>
-          <h2 class="font-display text-lg font-bold text-lego-blue">Guest Link Generator</h2>
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] font-extrabold uppercase tracking-wider text-lego-red">Host Admin Mode</span>
+            <span id="dbStatusBadge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800">
+              Connecting Firebase...
+            </span>
+          </div>
+          <h2 class="font-display text-lg sm:text-xl font-bold text-lego-blue">Guest Whitelist & Live Coupon Monitor</h2>
         </div>
         <button id="closeAdminBtn" type="button" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold cursor-pointer">
           Close ✕
         </button>
       </div>
 
-      <p class="text-xs text-slate-600 leading-relaxed">
-        Type a guest's name below to preview their card or copy a clean shareable link (without admin controls).
-      </p>
-
-      <div class="flex flex-col sm:flex-row gap-2">
-        <input id="guestInput" type="text" placeholder="e.g. Leo & Family"
-          class="flex-1 bg-slate-50 border-2 border-slate-300 focus:border-lego-blue rounded-xl px-3.5 py-2.5 text-sm font-semibold text-slate-800 outline-none" />
-        <button id="previewGuestBtn" type="button"
-          class="px-4 py-2.5 rounded-xl bg-lego-yellow hover:bg-lego-yellowDark text-slate-900 font-bold text-xs sm:text-sm border-2 border-amber-400 transition cursor-pointer whitespace-nowrap">
-          Preview Guest
-        </button>
-      </div>
-
-      <!-- Shareable Clean URL -->
-      <div class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-3 space-y-2">
-        <label class="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500">
-          Clean Shareable Guest URL:
-        </label>
-        <div class="flex flex-col sm:flex-row gap-2">
-          <input id="generatedUrlInput" type="text" readonly
-            class="flex-1 bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs font-mono text-slate-700 outline-none" />
-          <div class="flex gap-2">
-            <button id="copyUrlBtn" type="button"
-              class="flex-1 sm:flex-none px-3.5 py-2 rounded-xl bg-lego-green hover:bg-lego-greenDark text-white font-bold text-xs transition cursor-pointer">
-              Copy Link
-            </button>
-            <a id="shareWaBtn" href="#" target="_blank" rel="noopener noreferrer"
-              class="flex-1 sm:flex-none px-3.5 py-2 rounded-xl bg-[#25D366] hover:bg-[#1ebe5d] text-white font-bold text-xs transition text-center">
-              WhatsApp
-            </a>
-          </div>
+      <!-- Summary Counters -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-center">
+        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-2.5">
+          <span class="block text-[10px] font-bold uppercase text-slate-500">Registered</span>
+          <span id="statTotal" class="font-display text-xl font-bold text-lego-blue">0</span>
+        </div>
+        <div class="bg-blue-50/70 border border-blue-200 rounded-2xl p-2.5">
+          <span class="block text-[10px] font-bold uppercase text-lego-blue">Sent</span>
+          <span id="statSent" class="font-display text-xl font-bold text-lego-blue">0</span>
+        </div>
+        <div class="bg-amber-50/80 border border-amber-300 rounded-2xl p-2.5">
+          <span class="block text-[10px] font-bold uppercase text-amber-800">Food Used</span>
+          <span id="statFood" class="font-display text-xl font-bold text-lego-red">0</span>
+        </div>
+        <div class="bg-emerald-50/80 border border-emerald-200 rounded-2xl p-2.5">
+          <span class="block text-[10px] font-bold uppercase text-emerald-800">Drink Used</span>
+          <span id="statDrink" class="font-display text-xl font-bold text-lego-green">0</span>
         </div>
       </div>
 
-      <!-- Reset Coupons Button -->
-      <div class="pt-2 border-t border-slate-200 flex items-center justify-between gap-2">
-        <span class="text-[11px] text-slate-500">Reset current guest's coupons for testing:</span>
-        <button id="resetCouponsBtn" type="button"
-          class="px-3 py-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-lego-red border border-red-200 text-xs font-bold transition cursor-pointer">
-          Reset Coupons
-        </button>
+      <!-- Register New Guest Form -->
+      <div class="bg-lego-sand/70 border-2 border-amber-300/80 rounded-2xl p-3.5 space-y-2.5">
+        <label class="block text-[11px] font-extrabold uppercase tracking-wider text-amber-900">
+          Register Official Guest (Blocks URL Tampering like ?to=Kaivan1):
+        </label>
+        <div class="flex flex-col sm:flex-row gap-2">
+          <input id="guestInput" type="text" placeholder="Enter guest name (e.g. Kaivan)"
+            class="flex-1 bg-white border-2 border-slate-300 focus:border-lego-blue rounded-xl px-3.5 py-2.5 text-sm font-semibold text-slate-800 outline-none" />
+          <button id="addGuestBtn" type="button"
+            class="lego-btn px-4 py-2.5 rounded-xl bg-lego-green hover:bg-lego-greenDark text-white font-display font-bold text-xs sm:text-sm transition cursor-pointer whitespace-nowrap">
+            + Register Guest
+          </button>
+        </div>
+      </div>
+
+      <!-- Search / Filter Guests -->
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2">
+        <input id="searchGuestInput" type="text" placeholder="Search registered guest or code..."
+          class="flex-1 bg-slate-50 border border-slate-300 focus:border-lego-blue rounded-xl px-3 py-2 text-xs font-semibold text-slate-700 outline-none" />
+        <select id="filterStatusSelect" class="bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 outline-none">
+          <option value="all">All Guests</option>
+          <option value="unsent">Not Sent Yet</option>
+          <option value="sent">Sent</option>
+          <option value="redeemed">Any Coupon Redeemed</option>
+        </select>
+      </div>
+
+      <!-- Live Guest Monitoring List -->
+      <div id="guestListContainer" class="space-y-2.5 max-h-96 overflow-y-auto pr-1">
+        <p class="text-xs text-slate-500 text-center py-4">Loading registered guests...</p>
       </div>
     </div>
   </section>
 
   <!-- MAIN CONTENT -->
   <main class="max-w-xl w-full mx-auto px-4 py-6 sm:py-8 space-y-7 relative z-10">
+
+    <!-- UNREGISTERED / TAMPERED URL WARNING BANNER -->
+    <div id="unregisteredBanner" class="hidden bg-red-50 border-4 border-lego-red rounded-3xl p-5 text-center space-y-2 shadow-lg">
+      <div class="inline-flex items-center justify-center w-11 h-11 rounded-2xl bg-lego-red text-white text-xl font-bold mx-auto">
+        !
+      </div>
+      <h2 class="font-display text-xl font-bold text-lego-red">
+        Invitation Pass Not Registered
+      </h2>
+      <p id="unregisteredReason" class="text-xs sm:text-sm text-slate-700 leading-relaxed">
+        This invitation link is not on the official guest list or the URL has been modified. Please use the exact link sent by the host to activate your Food & Drink coupons.
+      </p>
+    </div>
 
     <!-- 1. MAIN INVITATION CARD -->
     <section class="relative">
@@ -226,7 +254,7 @@
       <!-- Card Body -->
       <div class="relative bg-white rounded-[2rem] border-[6px] border-lego-yellow shadow-[0_14px_35px_rgba(0,85,191,0.14)] p-6 sm:p-8 text-center overflow-hidden">
 
-        <!-- Decorative Corner Bricks (pointer-events-none so they never block clicks) -->
+        <!-- Decorative Corner Bricks -->
         <div class="hidden sm:block absolute -top-2 -left-2 w-12 h-8 bg-lego-blue rounded-lg rotate-12 opacity-90 shadow-md pointer-events-none"></div>
         <div class="hidden sm:block absolute top-6 -right-3 w-11 h-7 bg-lego-red rounded-lg -rotate-12 opacity-90 shadow-md pointer-events-none"></div>
 
@@ -284,10 +312,10 @@
               SPECIAL INVITATION FOR:
             </span>
             <h2 id="guestNameDisplay" class="font-display text-2xl sm:text-3xl font-bold text-lego-blue break-words leading-snug">
-              Special Guest
+              Checking Pass...
             </h2>
             <span id="guestTicketBadge" class="inline-block mt-1.5 px-3 py-0.5 rounded-full bg-white text-[11px] font-mono font-bold text-lego-red border border-amber-300">
-              GUEST ID: BRICK-0000
+              PASS CODE: ----
             </span>
           </div>
         </div>
@@ -305,7 +333,7 @@
           </p>
         </div>
 
-        <!-- Event Details (No RSVP) -->
+        <!-- Event Details -->
         <div class="mt-6 bg-lego-sand/90 border-2 border-amber-300/80 rounded-2xl p-4 sm:p-5 space-y-3.5 text-left max-w-md mx-auto">
           <!-- Date -->
           <div class="flex items-center gap-3.5">
@@ -334,7 +362,7 @@
             <div>
               <span class="block text-[10px] font-extrabold uppercase tracking-wider text-lego-blue">Time</span>
               <p id="eventTime" class="font-display text-base sm:text-lg font-bold text-lego-blue leading-tight">
-                4:30 PM
+                4:00 PM
               </p>
             </div>
           </div>
@@ -402,19 +430,13 @@
           <!-- Header -->
           <div class="bg-lego-yellow px-5 py-3 flex items-center justify-between border-b-2 border-amber-400">
             <div class="flex items-center gap-3">
-              <!-- Custom Inline SVG: Dapur Solo lunch box Logo -->
               <div class="w-16 h-12 rounded-xl bg-white border-2 border-amber-400/90 flex items-center justify-center p-1 shadow-sm shrink-0">
                 <svg viewBox="0 0 180 124" class="w-full h-full" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Dapur Solo lunch box">
-                  <!-- "Dapur" in dark brown serif -->
                   <text x="86" y="40" text-anchor="middle" fill="#4A2107" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="37" letter-spacing="-0.8">Dapur</text>
-                  <!-- Registered Trademark Symbol -->
                   <circle cx="148" cy="18" r="5.5" fill="none" stroke="#4A2107" stroke-width="1.4"/>
                   <text x="148" y="21" text-anchor="middle" fill="#4A2107" font-family="Arial, sans-serif" font-weight="700" font-size="7.5">R</text>
-                  <!-- "Solo" in dark brown serif -->
                   <text x="86" y="72" text-anchor="middle" fill="#4A2107" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="37" letter-spacing="-0.6">Solo</text>
-                  <!-- "lunch box" in vibrant orange serif -->
                   <text x="90" y="96" text-anchor="middle" fill="#F47920" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="25" letter-spacing="-0.3">lunch box</text>
-                  <!-- Sweeping orange curved swoosh underneath -->
                   <path d="M 18 117 Q 92 98 164 103 C 168 103.5 168 109 163 109 C 95 106 42 113 18 117 Z" fill="#F47920"/>
                 </svg>
               </div>
@@ -432,19 +454,19 @@
           <div class="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-20">
             <div class="space-y-1">
               <p class="text-xs text-slate-500 font-semibold">Guest Name:</p>
-              <p class="coupon-owner font-display text-lg font-bold text-slate-800">Special Guest</p>
+              <p class="coupon-owner font-display text-lg font-bold text-slate-800">---</p>
               <p id="code-food" class="inline-block text-xs font-mono font-bold text-lego-red bg-red-50 px-2.5 py-0.5 rounded-md border border-red-200">
-                CODE: FOOD-0000
+                CODE: FOOD-----
               </p>
             </div>
 
-            <button id="btn-food" type="button"
-              class="lego-btn relative z-30 pointer-events-auto w-full sm:w-auto px-5 py-3 rounded-2xl bg-lego-red hover:bg-lego-redDark text-white font-display font-bold text-sm tracking-wide cursor-pointer">
-              Redeem Coupon
+            <button id="btn-food" type="button" disabled
+              class="relative z-30 w-full sm:w-auto px-5 py-3 rounded-2xl bg-slate-200 text-slate-500 border-2 border-slate-300 font-display font-bold text-sm tracking-wide cursor-not-allowed">
+              Verifying...
             </button>
           </div>
 
-          <!-- Redeemed Stamp Banner (Shown after redemption) -->
+          <!-- Redeemed Stamp Banner -->
           <div id="stamp-food" class="hidden px-5 pb-5 pt-2 border-t-2 border-dashed border-slate-200 flex flex-wrap items-center justify-between gap-2 bg-slate-50/80">
             <span class="stamp-used-badge text-xs sm:text-sm">ALREADY USED</span>
             <span id="time-food" class="text-xs font-mono font-bold text-slate-600"></span>
@@ -459,17 +481,12 @@
           <!-- Header -->
           <div class="bg-lego-blue px-5 py-3 flex items-center justify-between border-b-2 border-blue-800 text-white">
             <div class="flex items-center gap-3">
-              <!-- Custom Inline SVG: JAGO Bold Red Logo with Signature Stepped/Lightning 'A' -->
               <div class="w-16 h-12 rounded-xl bg-white border-2 border-blue-900/30 flex items-center justify-center px-1.5 py-1 shadow-sm shrink-0">
                 <svg viewBox="0 0 220 74" class="w-full h-full" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="JAGO">
                   <g fill="#ED1C24">
-                    <!-- Letter J -->
                     <path d="M 14 14 H 47 L 40 48 C 37 61 28 66 15 66 C 8 66 3 64 2 60 L 4 50 C 5 48 7 48 10 49 C 15 50 20 49 22 43 L 26 26 H 13 C 11 26 10 25 11 22 L 12 16 C 12.5 14.5 13 14 14 14 Z"/>
-                    <!-- Letter A with signature stepped/lightning cutout -->
                     <path d="M 73 14 H 99 C 102 14 103 16 102 19 L 94 42 H 99 C 101 42 102 44 101 47 L 95 63 C 94 65 92 66 90 66 H 76 C 74 66 73 64 74 62 L 78 51 H 70 L 80 27 H 78 L 60 53 H 65 C 67 53 68 55 67 58 L 64 64 C 63 65.5 62 66 60 66 H 47 C 45 66 44 64 45 62 L 47 58 H 43 C 40 58 39 55 41 52 L 69 16 C 70.5 14.5 71.5 14 73 14 Z"/>
-                    <!-- Letter G -->
                     <path d="M 134 13 C 145 13 153 15 155 16 C 157 17 157 19 156 22 L 154 29 C 153.5 31 152 31.5 149 31 C 144 30 139 29 135 29 C 127 29 123 34 121 41 C 120 47 123 51 130 51 C 132 51 134 50.5 135 50 L 137 44 H 129 C 127 44 126.5 43 127 40 L 128 36 C 128.5 34.5 129.5 34 131 34 H 151 C 153 34 154 35.5 153.5 38 L 148 60 C 147 63 145 64.5 141 65.5 C 136 66.5 131 67 126 67 C 109 67 101 57 104 40 C 107 22 118 13 134 13 Z"/>
-                    <!-- Letter O -->
                     <path fill-rule="evenodd" d="M 189 13 C 206 13 215 23 212 40 C 209 57 197 67 180 67 C 163 67 154 57 157 40 C 160 23 172 13 189 13 Z M 187 28 C 180 28 176 33 175 40 C 174 47 177 52 183 52 C 190 52 194 47 195 40 C 196 33 193 28 187 28 Z"/>
                   </g>
                 </svg>
@@ -488,19 +505,19 @@
           <div class="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-20">
             <div class="space-y-1">
               <p class="text-xs text-slate-500 font-semibold">Guest Name:</p>
-              <p class="coupon-owner font-display text-lg font-bold text-slate-800">Special Guest</p>
+              <p class="coupon-owner font-display text-lg font-bold text-slate-800">---</p>
               <p id="code-drink" class="inline-block text-xs font-mono font-bold text-lego-blue bg-blue-50 px-2.5 py-0.5 rounded-md border border-blue-200">
-                CODE: DRINK-0000
+                CODE: DRINK-----
               </p>
             </div>
 
-            <button id="btn-drink" type="button"
-              class="lego-btn relative z-30 pointer-events-auto w-full sm:w-auto px-5 py-3 rounded-2xl bg-lego-green hover:bg-lego-greenDark text-white font-display font-bold text-sm tracking-wide cursor-pointer">
-              Redeem Coupon
+            <button id="btn-drink" type="button" disabled
+              class="relative z-30 w-full sm:w-auto px-5 py-3 rounded-2xl bg-slate-200 text-slate-500 border-2 border-slate-300 font-display font-bold text-sm tracking-wide cursor-not-allowed">
+              Verifying...
             </button>
           </div>
 
-          <!-- Redeemed Stamp Banner (Shown after redemption) -->
+          <!-- Redeemed Stamp Banner -->
           <div id="stamp-drink" class="hidden px-5 pb-5 pt-2 border-t-2 border-dashed border-slate-200 flex flex-wrap items-center justify-between gap-2 bg-slate-50/80">
             <span class="stamp-used-badge text-xs sm:text-sm">ALREADY USED</span>
             <span id="time-drink" class="text-xs font-mono font-bold text-slate-600"></span>
@@ -550,16 +567,40 @@
     </div>
   </div>
 
-  <script>
+  <!-- FIREBASE REALTIME DATABASE MODULE -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+    import {
+      getDatabase,
+      ref,
+      set,
+      get,
+      update,
+      remove,
+      onValue,
+      runTransaction
+    } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
+
     // =========================================================
-    // 1. EVENT CONFIGURATION (Customize your party details here)
+    // 1. YOUR FIREBASE CONFIGURATION (undangan-kava)
     // =========================================================
+    const firebaseConfig = {
+      apiKey: "AIzaSyBjPDyg83oDsQDijGq2D4rqE6JyB4dERaw",
+      authDomain: "undangan-kava.firebaseapp.com",
+      databaseURL: "https://undangan-kava-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "undangan-kava",
+      storageBucket: "undangan-kava.firebasestorage.app",
+      messagingSenderId: "154352446459",
+      appId: "1:154352446459:web:3cdfd441f3aa634998795e",
+      measurementId: "G-TCT7DPXLP9"
+    };
+
     const EVENT_CONFIG = {
       childName: "Arkanza",
       age: 3,
       title: "Arkanza's 3rd Birthday Party!",
       date: "Wednesday, December 2nd, 2026",
-      time: "4:30 PM",
+      time: "4:00 PM",
       venue: "Paradise Park 3 D1-11",
       address: "Kids Play & Party Lounge"
     };
@@ -570,32 +611,42 @@
     document.getElementById("eventVenue").textContent = EVENT_CONFIG.venue;
     document.getElementById("eventAddress").textContent = EVENT_CONFIG.address;
 
-    // =========================================================
-    // 2. READ URL PARAMETERS (?to=Guest+Name & ?admin=1)
-    // =========================================================
-    const DEFAULT_GUEST = "Special Guest";
-    const urlParams = new URLSearchParams(window.location.search);
-    const rawTo = urlParams.get("to");
-    const isAdminMode = urlParams.get("admin") === "1";
-    let currentGuestName = rawTo && rawTo.trim() !== "" ? rawTo.trim() : DEFAULT_GUEST;
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const guestsRef = ref(db, "guests");
 
-    // Generate deterministic 4-character ID per guest name
-    function generateTicketHash(name) {
-      let hash = 0;
-      const clean = name.trim().toUpperCase();
-      for (let i = 0; i < clean.length; i++) {
-        hash = ((hash << 5) - hash) + clean.charCodeAt(i);
-        hash |= 0;
+    // =========================================================
+    // 2. URL PARAMETERS & HELPER FUNCTIONS
+    // =========================================================
+    const urlParams = new URLSearchParams(window.location.search);
+    const paramCode = (urlParams.get("code") || "").trim().toUpperCase();
+    const paramTo = (urlParams.get("to") || "").trim();
+    const isAdminMode = urlParams.get("admin") === "1";
+
+    let allGuestsMap = {};
+    let activeGuestId = null;
+    let activeGuestData = null;
+    let pendingCouponType = null;
+
+    function generatePassCode() {
+      const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+      let code = "ARK-";
+      for (let i = 0; i < 4; i++) {
+        code += chars.charAt(Math.floor(Math.random() * chars.length));
       }
-      return Math.abs(hash).toString(36).toUpperCase().padStart(4, "0").slice(0, 4);
+      return code;
     }
 
-    function getStorageKey(guestName, couponType) {
-      const slug = guestName.trim().toLowerCase().replace(/[^a-z0-9]+/g, "_") || "special_guest";
-      return `lego_bday3_${slug}_${couponType}`;
+    function normalizeName(str) {
+      return (str || "").trim().toLowerCase().replace(/\s+/g, " ");
+    }
+
+    function getCleanBaseUrl() {
+      return window.location.href.split("#")[0].split("?")[0];
     }
 
     function formatTimestampWIB(isoString) {
+      if (!isoString) return "";
       const date = new Date(isoString);
       return date.toLocaleString("en-GB", {
         day: "2-digit",
@@ -607,7 +658,6 @@
       }) + " WIB";
     }
 
-    // Toast Notification Helper
     let toastTimer = null;
     function showToast(message, emoji = "🧱") {
       const toastEl = document.getElementById("toast");
@@ -617,88 +667,148 @@
       clearTimeout(toastTimer);
       toastTimer = setTimeout(() => {
         toastEl.classList.add("translate-y-24", "opacity-0");
-      }, 2600);
+      }, 2800);
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement("div");
+      div.textContent = text;
+      return div.innerHTML;
     }
 
     // =========================================================
-    // 3. COUPON STATE & INTERACTIVE REDEMPTION LOGIC
+    // 3. GUEST VALIDATION & COUPON UI RENDERING
     // =========================================================
-    let pendingCouponType = null;
+    function lockCouponButtons(labelText = "Pass Required") {
+      ["food", "drink"].forEach(type => {
+        const card = document.getElementById(`card-${type}`);
+        const btn = document.getElementById(`btn-${type}`);
+        const stamp = document.getElementById(`stamp-${type}`);
 
-    function setCouponAvailableUI(type) {
-      const card = document.getElementById(`card-${type}`);
-      const btn = document.getElementById(`btn-${type}`);
-      const stamp = document.getElementById(`stamp-${type}`);
-
-      card.classList.remove("opacity-80");
-      stamp.classList.add("hidden");
-
-      btn.disabled = false;
-      btn.textContent = "Redeem Coupon";
-      if (type === "food") {
-        btn.className = "lego-btn relative z-30 pointer-events-auto w-full sm:w-auto px-5 py-3 rounded-2xl bg-lego-red hover:bg-lego-redDark text-white font-display font-bold text-sm tracking-wide cursor-pointer";
-      } else {
-        btn.className = "lego-btn relative z-30 pointer-events-auto w-full sm:w-auto px-5 py-3 rounded-2xl bg-lego-green hover:bg-lego-greenDark text-white font-display font-bold text-sm tracking-wide cursor-pointer";
-      }
+        card.classList.add("opacity-75");
+        stamp.classList.add("hidden");
+        btn.disabled = true;
+        btn.textContent = labelText;
+        btn.className = "relative z-30 w-full sm:w-auto px-5 py-3 rounded-2xl bg-slate-200 text-slate-500 border-2 border-slate-300 font-display font-bold text-sm tracking-wide cursor-not-allowed";
+      });
     }
 
-    function setCouponUsedUI(type, usedAtIso) {
+    function renderSingleCoupon(type, couponObj, passCode) {
       const card = document.getElementById(`card-${type}`);
       const btn = document.getElementById(`btn-${type}`);
       const stamp = document.getElementById(`stamp-${type}`);
       const timeLabel = document.getElementById(`time-${type}`);
+      const codeEl = document.getElementById(`code-${type}`);
 
-      card.classList.add("opacity-80");
-      btn.disabled = true;
-      btn.textContent = "Used";
-      btn.className = "relative z-30 w-full sm:w-auto px-5 py-3 rounded-2xl bg-slate-200 text-slate-500 border-2 border-slate-300 font-display font-bold text-sm tracking-wide cursor-not-allowed";
+      const shortCode = passCode.replace("ARK-", "");
+      codeEl.textContent = `CODE: ${type.toUpperCase()}-${shortCode}`;
 
-      stamp.classList.remove("hidden");
-      timeLabel.textContent = `Redeemed: ${formatTimestampWIB(usedAtIso)}`;
-    }
-
-    function renderGuestAndCoupons() {
-      const code = generateTicketHash(currentGuestName);
-
-      // Update guest name and IDs
-      document.getElementById("guestNameDisplay").textContent = currentGuestName;
-      document.getElementById("guestTicketBadge").textContent = `GUEST ID: BRICK-${code}`;
-      document.getElementById("code-food").textContent = `CODE: FOOD-${code}`;
-      document.getElementById("code-drink").textContent = `CODE: DRINK-${code}`;
-
-      document.querySelectorAll(".coupon-owner").forEach(el => {
-        el.textContent = currentGuestName;
-      });
-
-      // Check localStorage status for food and drink coupons
-      ["food", "drink"].forEach(type => {
-        const saved = localStorage.getItem(getStorageKey(currentGuestName, type));
-        if (saved) {
-          try {
-            const data = JSON.parse(saved);
-            if (data && data.used && data.usedAt) {
-              setCouponUsedUI(type, data.usedAt);
-              return;
-            }
-          } catch (e) {}
+      if (couponObj && couponObj.used) {
+        card.classList.add("opacity-80");
+        btn.disabled = true;
+        btn.textContent = "Used";
+        btn.className = "relative z-30 w-full sm:w-auto px-5 py-3 rounded-2xl bg-slate-200 text-slate-500 border-2 border-slate-300 font-display font-bold text-sm tracking-wide cursor-not-allowed";
+        stamp.classList.remove("hidden");
+        timeLabel.textContent = `Redeemed: ${formatTimestampWIB(couponObj.usedAt)}`;
+      } else {
+        card.classList.remove("opacity-80", "opacity-75");
+        stamp.classList.add("hidden");
+        btn.disabled = false;
+        btn.textContent = "Redeem Coupon";
+        if (type === "food") {
+          btn.className = "lego-btn relative z-30 pointer-events-auto w-full sm:w-auto px-5 py-3 rounded-2xl bg-lego-red hover:bg-lego-redDark text-white font-display font-bold text-sm tracking-wide cursor-pointer";
+        } else {
+          btn.className = "lego-btn relative z-30 pointer-events-auto w-full sm:w-auto px-5 py-3 rounded-2xl bg-lego-green hover:bg-lego-greenDark text-white font-display font-bold text-sm tracking-wide cursor-pointer";
         }
-        setCouponAvailableUI(type);
-      });
+      }
     }
 
+    function evaluateCurrentGuestFromMap() {
+      const unregisteredBanner = document.getElementById("unregisteredBanner");
+      const unregisteredReason = document.getElementById("unregisteredReason");
+
+      let foundId = null;
+      let foundGuest = null;
+
+      if (paramCode) {
+        for (const [id, guest] of Object.entries(allGuestsMap)) {
+          if ((guest.code || "").toUpperCase() === paramCode) {
+            foundId = id;
+            foundGuest = guest;
+            break;
+          }
+        }
+      } else if (paramTo) {
+        const targetNorm = normalizeName(paramTo);
+        for (const [id, guest] of Object.entries(allGuestsMap)) {
+          if (normalizeName(guest.name) === targetNorm) {
+            foundId = id;
+            foundGuest = guest;
+            break;
+          }
+        }
+      }
+
+      if (foundId && foundGuest) {
+        activeGuestId = foundId;
+        activeGuestData = foundGuest;
+
+        unregisteredBanner.classList.add("hidden");
+        document.getElementById("guestNameDisplay").textContent = foundGuest.name;
+        document.getElementById("guestTicketBadge").textContent = `PASS CODE: ${foundGuest.code}`;
+        document.querySelectorAll(".coupon-owner").forEach(el => {
+          el.textContent = foundGuest.name;
+        });
+
+        renderSingleCoupon("food", foundGuest.food, foundGuest.code);
+        renderSingleCoupon("drink", foundGuest.drink, foundGuest.code);
+      } else {
+        activeGuestId = null;
+        activeGuestData = null;
+
+        const attemptedName = paramTo || paramCode || "No Guest Specified";
+        document.getElementById("guestNameDisplay").textContent = attemptedName;
+        document.getElementById("guestTicketBadge").textContent = "STATUS: UNREGISTERED";
+        document.querySelectorAll(".coupon-owner").forEach(el => {
+          el.textContent = attemptedName;
+        });
+        document.getElementById("code-food").textContent = "CODE: INVALID";
+        document.getElementById("code-drink").textContent = "CODE: INVALID";
+
+        lockCouponButtons("Unregistered");
+
+        if (!isAdminMode || paramTo || paramCode) {
+          unregisteredBanner.classList.remove("hidden");
+          if (paramTo) {
+            unregisteredReason.innerHTML = `The name <strong>"${escapeHtml(paramTo)}"</strong> is not registered on the official guest list. Changing the web address (e.g., adding numbers) will not unlock extra coupons.`;
+          } else if (paramCode) {
+            unregisteredReason.innerHTML = `Pass code <strong>"${escapeHtml(paramCode)}"</strong> was not found. Please open the exact invitation link sent by the host.`;
+          } else {
+            unregisteredReason.textContent = "Please open your personal invitation link sent by the host to activate your Food & Drink coupons.";
+          }
+        }
+      }
+    }
+
+    // =========================================================
+    // 4. ATOMIC FIREBASE COUPON REDEMPTION
+    // =========================================================
     function openConfirmModal(type) {
-      // Prevent opening if already redeemed
-      const saved = localStorage.getItem(getStorageKey(currentGuestName, type));
-      if (saved) return;
+      if (!activeGuestId || !activeGuestData) {
+        showToast("Unregistered pass cannot redeem coupons.", "⚠️");
+        return;
+      }
+      if (activeGuestData[type] && activeGuestData[type].used) {
+        return;
+      }
 
       pendingCouponType = type;
-      const couponTitle = type === "food" ? "Food Coupon" : "Drink Coupon";
+      const couponTitle = type === "food" ? "Food Coupon (Dapur Solo)" : "Drink Coupon (JAGO)";
       document.getElementById("confirmModalDesc").innerHTML =
-        `Are you sure you want to redeem <strong>${couponTitle}</strong> for <strong>${currentGuestName}</strong>? Once confirmed, this coupon is permanently locked and cannot be clicked again.`;
+        `Are you sure you want to redeem <strong>${couponTitle}</strong> for <strong>${escapeHtml(activeGuestData.name)}</strong>? Once confirmed, this coupon is permanently locked across all devices.`;
       document.getElementById("confirmModal").classList.remove("hidden");
     }
 
-    // Bind click listeners directly to both coupon buttons
     document.getElementById("btn-food").addEventListener("click", () => openConfirmModal("food"));
     document.getElementById("btn-drink").addEventListener("click", () => openConfirmModal("drink"));
 
@@ -707,113 +817,299 @@
       document.getElementById("confirmModal").classList.add("hidden");
     });
 
-    document.getElementById("confirmUseBtn").addEventListener("click", () => {
-      if (!pendingCouponType) return;
-      const nowIso = new Date().toISOString();
-      const key = getStorageKey(currentGuestName, pendingCouponType);
+    document.getElementById("confirmUseBtn").addEventListener("click", async () => {
+      if (!pendingCouponType || !activeGuestId) return;
+      const type = pendingCouponType;
+      const confirmBtn = document.getElementById("confirmUseBtn");
+      confirmBtn.disabled = true;
+      confirmBtn.textContent = "Saving...";
 
-      localStorage.setItem(key, JSON.stringify({
-        used: true,
-        usedAt: nowIso,
-        guest: currentGuestName,
-        type: pendingCouponType
-      }));
+      try {
+        const couponRef = ref(db, `guests/${activeGuestId}/${type}`);
+        const nowIso = new Date().toISOString();
 
-      setCouponUsedUI(pendingCouponType, nowIso);
-      const label = pendingCouponType === "food" ? "Food Coupon" : "Drink Coupon";
-      showToast(`${label} redeemed!`, "✅");
+        const txResult = await runTransaction(couponRef, (currentVal) => {
+          if (currentVal && currentVal.used) {
+            return; // Abort if already redeemed on another device
+          }
+          return {
+            used: true,
+            usedAt: nowIso
+          };
+        });
 
-      pendingCouponType = null;
-      document.getElementById("confirmModal").classList.add("hidden");
+        if (txResult.committed) {
+          const label = type === "food" ? "Food Coupon" : "Drink Coupon";
+          showToast(`${label} redeemed & synced!`, "✅");
+        } else {
+          showToast("This coupon was already redeemed!", "⚠️");
+        }
+      } catch (err) {
+        console.error(err);
+        showToast("Network error. Check Firebase Rules.", "❌");
+      } finally {
+        confirmBtn.disabled = false;
+        confirmBtn.textContent = "Confirm";
+        pendingCouponType = null;
+        document.getElementById("confirmModal").classList.add("hidden");
+      }
     });
 
     // =========================================================
-    // 4. HIDDEN ADMIN PANEL (?admin=1 ONLY)
+    // 5. HOST MONITORING & WHITELIST ADMIN PANEL (?admin=1)
     // =========================================================
     const toggleAdminBtn = document.getElementById("toggleAdminBtn");
     const adminPanel = document.getElementById("adminPanel");
-    const guestInput = document.getElementById("guestInput");
-    const generatedUrlInput = document.getElementById("generatedUrlInput");
-    const shareWaBtn = document.getElementById("shareWaBtn");
+    const dbStatusBadge = document.getElementById("dbStatusBadge");
 
     if (isAdminMode) {
       toggleAdminBtn.classList.remove("hidden");
       toggleAdminBtn.classList.add("flex");
-    }
-
-    function getCleanBaseUrl() {
-      return window.location.href.split("#")[0].split("?")[0];
-    }
-
-    function updateShareableUrl(nameVal) {
-      const cleanName = (nameVal || "").trim();
-      const base = getCleanBaseUrl();
-      const shareUrl = cleanName
-        ? `${base}?to=${encodeURIComponent(cleanName).replace(/%20/g, "+")}`
-        : base;
-
-      generatedUrlInput.value = shareUrl;
-
-      const displayGuest = cleanName || DEFAULT_GUEST;
-      const waMessage = `Hi *${displayGuest}*! 🎉\n\nYou're invited to *${EVENT_CONFIG.childName}'s ${EVENT_CONFIG.age}rd Birthday Party* (LEGO Theme)!\n\nOpen your personalized invitation & food/drink coupons here:\n${shareUrl}`;
-      shareWaBtn.href = `https://wa.me/?text=${encodeURIComponent(waMessage)}`;
+      adminPanel.classList.remove("hidden");
     }
 
     toggleAdminBtn.addEventListener("click", () => {
       if (!isAdminMode) return;
       adminPanel.classList.toggle("hidden");
-      guestInput.value = currentGuestName === DEFAULT_GUEST ? "" : currentGuestName;
-      updateShareableUrl(guestInput.value);
     });
 
     document.getElementById("closeAdminBtn").addEventListener("click", () => {
       adminPanel.classList.add("hidden");
     });
 
-    guestInput.addEventListener("input", (e) => {
-      updateShareableUrl(e.target.value);
-    });
+    function buildGuestInviteUrl(guest) {
+      const base = getCleanBaseUrl();
+      const encodedName = encodeURIComponent(guest.name).replace(/%20/g, "+");
+      return `${base}?to=${encodedName}&code=${encodeURIComponent(guest.code)}`;
+    }
 
-    document.getElementById("previewGuestBtn").addEventListener("click", () => {
-      const nextName = guestInput.value.trim() || DEFAULT_GUEST;
-      currentGuestName = nextName;
-      renderGuestAndCoupons();
-      updateShareableUrl(nextName === DEFAULT_GUEST ? "" : nextName);
+    async function registerNewGuest() {
+      const inputEl = document.getElementById("guestInput");
+      const rawName = inputEl.value.trim();
+      if (!rawName) {
+        showToast("Please type a guest name first.", "⚠️");
+        return;
+      }
+
+      const normNew = normalizeName(rawName);
+      const duplicate = Object.values(allGuestsMap).find(g => normalizeName(g.name) === normNew);
+      if (duplicate) {
+        showToast(`"${rawName}" is already registered (${duplicate.code})!`, "ℹ️");
+        return;
+      }
+
+      let code = generatePassCode();
+      const existingCodes = new Set(Object.values(allGuestsMap).map(g => g.code));
+      while (existingCodes.has(code)) {
+        code = generatePassCode();
+      }
+
+      const guestId = code.toLowerCase().replace(/[^a-z0-9]/g, "_");
+      const newGuestPayload = {
+        name: rawName,
+        code: code,
+        sent: false,
+        sentAt: null,
+        createdAt: new Date().toISOString(),
+        food: { used: false, usedAt: null },
+        drink: { used: false, usedAt: null }
+      };
 
       try {
-        const nextUrl = new URL(window.location.href);
-        if (nextName === DEFAULT_GUEST) {
-          nextUrl.searchParams.delete("to");
-        } else {
-          nextUrl.searchParams.set("to", nextName);
-        }
-        nextUrl.searchParams.set("admin", "1");
-        window.history.replaceState({}, "", nextUrl.toString());
-      } catch (e) {}
+        await set(ref(db, `guests/${guestId}`), newGuestPayload);
+        inputEl.value = "";
+        showToast(`Registered ${rawName} (${code})`, "✅");
+      } catch (err) {
+        console.error(err);
+        showToast("Failed to save. Check Firebase Rules!", "❌");
+      }
+    }
 
-      showToast(`Previewing: ${currentGuestName}`, "👤");
-    });
-
-    document.getElementById("copyUrlBtn").addEventListener("click", () => {
-      generatedUrlInput.select();
-      generatedUrlInput.setSelectionRange(0, 99999);
-      try {
-        document.execCommand("copy");
-        showToast("Clean guest link copied!", "📋");
-      } catch (e) {
-        showToast("Please copy the URL manually.", "ℹ️");
+    document.getElementById("addGuestBtn").addEventListener("click", registerNewGuest);
+    document.getElementById("guestInput").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        registerNewGuest();
       }
     });
 
-    document.getElementById("resetCouponsBtn").addEventListener("click", () => {
-      localStorage.removeItem(getStorageKey(currentGuestName, "food"));
-      localStorage.removeItem(getStorageKey(currentGuestName, "drink"));
-      renderGuestAndCoupons();
-      showToast(`Coupons reset for ${currentGuestName}`, "🔄");
+    function renderAdminDashboard() {
+      if (!isAdminMode) return;
+
+      const entries = Object.entries(allGuestsMap).sort((a, b) => {
+        return (b[1].createdAt || "").localeCompare(a[1].createdAt || "");
+      });
+
+      const totalCount = entries.length;
+      const sentCount = entries.filter(([, g]) => g.sent).length;
+      const foodUsedCount = entries.filter(([, g]) => g.food && g.food.used).length;
+      const drinkUsedCount = entries.filter(([, g]) => g.drink && g.drink.used).length;
+
+      document.getElementById("statTotal").textContent = totalCount;
+      document.getElementById("statSent").textContent = sentCount;
+      document.getElementById("statFood").textContent = `${foodUsedCount}/${totalCount}`;
+      document.getElementById("statDrink").textContent = `${drinkUsedCount}/${totalCount}`;
+
+      const searchTerm = normalizeName(document.getElementById("searchGuestInput").value);
+      const statusFilter = document.getElementById("filterStatusSelect").value;
+
+      const filtered = entries.filter(([, g]) => {
+        const matchesText =
+          !searchTerm ||
+          normalizeName(g.name).includes(searchTerm) ||
+          (g.code || "").toLowerCase().includes(searchTerm);
+
+        if (!matchesText) return false;
+        if (statusFilter === "unsent") return !g.sent;
+        if (statusFilter === "sent") return !!g.sent;
+        if (statusFilter === "redeemed") return (g.food && g.food.used) || (g.drink && g.drink.used);
+        return true;
+      });
+
+      const container = document.getElementById("guestListContainer");
+      if (filtered.length === 0) {
+        container.innerHTML = `<p class="text-xs text-slate-500 text-center py-6">No matching guests found.</p>`;
+        return;
+      }
+
+      container.innerHTML = filtered.map(([id, g]) => {
+        const inviteUrl = buildGuestInviteUrl(g);
+        const waText = `Hi *${g.name}*! 🎉\n\nYou're invited to *${EVENT_CONFIG.childName}'s ${EVENT_CONFIG.age}rd Birthday Party* (LEGO Theme)!\n\nOpen your personal invitation & food/drink coupons here:\n${inviteUrl}`;
+        const waHref = `https://wa.me/?text=${encodeURIComponent(waText)}`;
+
+        const foodUsed = g.food && g.food.used;
+        const drinkUsed = g.drink && g.drink.used;
+
+        return `
+          <div class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-3.5 space-y-2.5">
+            <div class="flex flex-wrap items-start justify-between gap-2">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="font-display font-bold text-base text-slate-800">${escapeHtml(g.name)}</span>
+                  <span class="px-2 py-0.5 rounded-md bg-white border border-slate-300 font-mono text-[11px] font-bold text-lego-blue">
+                    ${escapeHtml(g.code)}
+                  </span>
+                </div>
+                <div class="flex flex-wrap items-center gap-1.5 mt-1.5">
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold ${g.sent ? 'bg-blue-100 text-lego-blue' : 'bg-slate-200 text-slate-600'}">
+                    ${g.sent ? '✓ Sent' : 'Not Sent'}
+                  </span>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold ${foodUsed ? 'bg-red-100 text-lego-red' : 'bg-amber-100 text-amber-800'}">
+                    Food: ${foodUsed ? 'REDEEMED' : 'Available'}
+                  </span>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold ${drinkUsed ? 'bg-red-100 text-lego-red' : 'bg-emerald-100 text-lego-green'}">
+                    Drink: ${drinkUsed ? 'REDEEMED' : 'Available'}
+                  </span>
+                </div>
+                ${foodUsed ? `<p class="text-[10px] font-mono text-slate-500 mt-1">🍱 Food used: ${formatTimestampWIB(g.food.usedAt)}</p>` : ''}
+                ${drinkUsed ? `<p class="text-[10px] font-mono text-slate-500">🥤 Drink used: ${formatTimestampWIB(g.drink.usedAt)}</p>` : ''}
+              </div>
+
+              <div class="flex flex-wrap items-center gap-1.5">
+                <button type="button" data-action="copy" data-id="${id}"
+                  class="px-2.5 py-1.5 rounded-lg bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 font-bold text-[11px] cursor-pointer">
+                  Copy Link
+                </button>
+                <a href="${waHref}" target="_blank" rel="noopener noreferrer" data-action="wa" data-id="${id}"
+                  class="px-2.5 py-1.5 rounded-lg bg-[#25D366] hover:bg-[#1ebe5d] text-white font-bold text-[11px]">
+                  WhatsApp
+                </a>
+                <button type="button" data-action="toggle-sent" data-id="${id}"
+                  class="px-2.5 py-1.5 rounded-lg ${g.sent ? 'bg-blue-100 text-lego-blue' : 'bg-lego-blue text-white'} font-bold text-[11px] cursor-pointer">
+                  ${g.sent ? 'Unmark Sent' : 'Mark Sent'}
+                </button>
+                <a href="${inviteUrl}&admin=1"
+                  class="px-2.5 py-1.5 rounded-lg bg-lego-yellow text-slate-900 font-bold text-[11px]">
+                  Open
+                </a>
+                ${(foodUsed || drinkUsed) ? `
+                  <button type="button" data-action="reset" data-id="${id}"
+                    class="px-2.5 py-1.5 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold text-[11px] cursor-pointer">
+                    Reset Coupons
+                  </button>
+                ` : ''}
+                <button type="button" data-action="delete" data-id="${id}"
+                  class="px-2 py-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-lego-red font-bold text-[11px] cursor-pointer" title="Remove Guest">
+                  ✕
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    document.getElementById("searchGuestInput").addEventListener("input", renderAdminDashboard);
+    document.getElementById("filterStatusSelect").addEventListener("change", renderAdminDashboard);
+
+    document.getElementById("guestListContainer").addEventListener("click", async (e) => {
+      const target = e.target.closest("[data-action]");
+      if (!target) return;
+
+      const action = target.getAttribute("data-action");
+      const id = target.getAttribute("data-id");
+      const guest = allGuestsMap[id];
+      if (!guest) return;
+
+      if (action === "copy") {
+        const url = buildGuestInviteUrl(guest);
+        try {
+          await navigator.clipboard.writeText(url);
+          showToast(`Copied link for ${guest.name}`, "📋");
+        } catch (err) {
+          prompt("Copy guest invitation link:", url);
+        }
+      } else if (action === "wa") {
+        await update(ref(db, `guests/${id}`), {
+          sent: true,
+          sentAt: new Date().toISOString()
+        });
+      } else if (action === "toggle-sent") {
+        const nextSent = !guest.sent;
+        await update(ref(db, `guests/${id}`), {
+          sent: nextSent,
+          sentAt: nextSent ? new Date().toISOString() : null
+        });
+        showToast(nextSent ? `Marked ${guest.name} as Sent` : `Unmarked ${guest.name}`, "📨");
+      } else if (action === "reset") {
+        if (confirm(`Reset Food & Drink coupons for ${guest.name}?`)) {
+          await update(ref(db, `guests/${id}`), {
+            food: { used: false, usedAt: null },
+            drink: { used: false, usedAt: null }
+          });
+          showToast(`Coupons reset for ${guest.name}`, "🔄");
+        }
+      } else if (action === "delete") {
+        if (confirm(`Remove ${guest.name} from the registered guest list?`)) {
+          await remove(ref(db, `guests/${id}`));
+          showToast(`Removed ${guest.name}`, "🗑️");
+        }
+      }
     });
 
-    // Initial page render
-    renderGuestAndCoupons();
+    // =========================================================
+    // 6. REAL-TIME FIREBASE LISTENER
+    // =========================================================
+    onValue(
+      guestsRef,
+      (snapshot) => {
+        allGuestsMap = snapshot.val() || {};
+        if (dbStatusBadge) {
+          dbStatusBadge.textContent = "Live Connected ●";
+          dbStatusBadge.className = "px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800";
+        }
+        evaluateCurrentGuestFromMap();
+        renderAdminDashboard();
+      },
+      (error) => {
+        console.error("Firebase read error:", error);
+        if (dbStatusBadge) {
+          dbStatusBadge.textContent = "Connection Error";
+          dbStatusBadge.className = "px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-100 text-lego-red";
+        }
+        lockCouponButtons("Offline");
+      }
+    );
   </script>
 </body>
 </html>
