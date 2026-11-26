@@ -135,7 +135,7 @@
           3
         </span>
         <span class="text-xs font-extrabold tracking-wider text-lego-blue uppercase">
-          LEGO Birthday Pass
+          Arkanza's Birthday Pass
         </span>
       </div>
 
@@ -266,7 +266,7 @@
 
             <!-- Number 3 Brick Badge -->
             <div class="-ml-3 mt-4 px-3.5 py-1.5 rounded-2xl bg-lego-blue border-4 border-white shadow-lg transform rotate-6 flex flex-col items-center">
-              <span class="text-[9px] font-extrabold uppercase tracking-wider text-lego-yellow leading-none">KAVA IS</span>
+              <span class="text-[9px] font-extrabold uppercase tracking-wider text-lego-yellow leading-none">ARKANZA IS</span>
               <span class="text-[9px] font-extrabold uppercase tracking-wider text-lego-yellow leading-none">TURNING</span>
               <span class="font-display text-3xl font-bold text-white leading-none drop-shadow">3</span>
             </div>
@@ -295,10 +295,10 @@
         <!-- Birthday Title -->
         <div class="mt-5 space-y-1.5">
           <p class="font-display text-sm sm:text-base font-semibold text-lego-blue/90">
-            Come play, and celebrate at
+            Come play and celebrate at
           </p>
           <h1 id="eventTitle" class="font-display text-3xl sm:text-4xl font-bold text-lego-blue tracking-tight leading-tight">
-            Kava's 3rd Birthday Party!
+            Arkanza's 3rd Birthday Party!
           </h1>
           <p class="text-xs sm:text-sm text-slate-600 max-w-md mx-auto pt-1 leading-relaxed">
             Join us for fun, games, cake, and yummy treats as we celebrate turning three!
@@ -317,7 +317,7 @@
             <div>
               <span class="block text-[10px] font-extrabold uppercase tracking-wider text-lego-red">Date</span>
               <p id="eventDate" class="font-display text-base sm:text-lg font-bold text-lego-blue leading-tight">
-                Wednesday, 2 December 2026
+                Wednesday, December 2nd, 2026
               </p>
             </div>
           </div>
@@ -394,21 +394,36 @@
 
       <div class="grid grid-cols-1 gap-4">
 
-        <!-- COUPON 1: FOOD COUPON -->
+        <!-- COUPON 1: FOOD COUPON (DAPUR SOLO LUNCH BOX) -->
         <article id="card-food" class="relative bg-white rounded-3xl border-4 border-lego-yellow shadow-lg overflow-hidden transition-all">
           <div class="ticket-notch-left"></div>
           <div class="ticket-notch-right"></div>
 
           <!-- Header -->
           <div class="bg-lego-yellow px-5 py-3 flex items-center justify-between border-b-2 border-amber-400">
-            <div class="flex items-center gap-2.5">
-              <span class="w-8 h-8 rounded-xl bg-lego-red text-white flex items-center justify-center text-lg shadow-sm">🍔</span>
+            <div class="flex items-center gap-3">
+              <!-- Custom Inline SVG: Dapur Solo lunch box Logo -->
+              <div class="w-16 h-12 rounded-xl bg-white border-2 border-amber-400/90 flex items-center justify-center p-1 shadow-sm shrink-0">
+                <svg viewBox="0 0 180 124" class="w-full h-full" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Dapur Solo lunch box">
+                  <!-- "Dapur" in dark brown serif -->
+                  <text x="86" y="40" text-anchor="middle" fill="#4A2107" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="37" letter-spacing="-0.8">Dapur</text>
+                  <!-- Registered Trademark Symbol -->
+                  <circle cx="148" cy="18" r="5.5" fill="none" stroke="#4A2107" stroke-width="1.4"/>
+                  <text x="148" y="21" text-anchor="middle" fill="#4A2107" font-family="Arial, sans-serif" font-weight="700" font-size="7.5">R</text>
+                  <!-- "Solo" in dark brown serif -->
+                  <text x="86" y="72" text-anchor="middle" fill="#4A2107" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="37" letter-spacing="-0.6">Solo</text>
+                  <!-- "lunch box" in vibrant orange serif -->
+                  <text x="90" y="96" text-anchor="middle" fill="#F47920" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="25" letter-spacing="-0.3">lunch box</text>
+                  <!-- Sweeping orange curved swoosh underneath -->
+                  <path d="M 18 117 Q 92 98 164 103 C 168 103.5 168 109 163 109 C 95 106 42 113 18 117 Z" fill="#F47920"/>
+                </svg>
+              </div>
               <div>
-                <span class="block text-[10px] font-extrabold uppercase tracking-wider text-amber-900">By DAPURSOLO</span>
-                <h4 class="font-display text-lg font-bold text-lego-blue leading-none">Food</h4>
+                <span class="block text-[10px] font-extrabold uppercase tracking-wider text-amber-900">By DapurSolo</span>
+                <h4 class="font-display text-lg font-bold text-lego-blue leading-none">Food Coupon</h4>
               </div>
             </div>
-            <span class="px-2.5 py-1 rounded-lg bg-lego-red text-white font-mono text-xs font-extrabold shadow-sm">
+            <span class="px-2.5 py-1 rounded-lg bg-lego-red text-white font-mono text-xs font-extrabold shadow-sm shrink-0">
               1x USE
             </span>
           </div>
@@ -436,21 +451,35 @@
           </div>
         </article>
 
-        <!-- COUPON 2: DRINK COUPON -->
+        <!-- COUPON 2: DRINK COUPON (JAGO COFFEE / BEVERAGE) -->
         <article id="card-drink" class="relative bg-white rounded-3xl border-4 border-lego-blue shadow-lg overflow-hidden transition-all">
           <div class="ticket-notch-left"></div>
           <div class="ticket-notch-right"></div>
 
           <!-- Header -->
           <div class="bg-lego-blue px-5 py-3 flex items-center justify-between border-b-2 border-blue-800 text-white">
-            <div class="flex items-center gap-2.5">
-              <span class="w-8 h-8 rounded-xl bg-lego-green text-white flex items-center justify-center text-lg shadow-sm">🧃</span>
+            <div class="flex items-center gap-3">
+              <!-- Custom Inline SVG: JAGO Bold Red Logo with Signature Stepped/Lightning 'A' -->
+              <div class="w-16 h-12 rounded-xl bg-white border-2 border-blue-900/30 flex items-center justify-center px-1.5 py-1 shadow-sm shrink-0">
+                <svg viewBox="0 0 220 74" class="w-full h-full" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="JAGO">
+                  <g fill="#ED1C24">
+                    <!-- Letter J -->
+                    <path d="M 14 14 H 47 L 40 48 C 37 61 28 66 15 66 C 8 66 3 64 2 60 L 4 50 C 5 48 7 48 10 49 C 15 50 20 49 22 43 L 26 26 H 13 C 11 26 10 25 11 22 L 12 16 C 12.5 14.5 13 14 14 14 Z"/>
+                    <!-- Letter A with signature stepped/lightning cutout -->
+                    <path d="M 73 14 H 99 C 102 14 103 16 102 19 L 94 42 H 99 C 101 42 102 44 101 47 L 95 63 C 94 65 92 66 90 66 H 76 C 74 66 73 64 74 62 L 78 51 H 70 L 80 27 H 78 L 60 53 H 65 C 67 53 68 55 67 58 L 64 64 C 63 65.5 62 66 60 66 H 47 C 45 66 44 64 45 62 L 47 58 H 43 C 40 58 39 55 41 52 L 69 16 C 70.5 14.5 71.5 14 73 14 Z"/>
+                    <!-- Letter G -->
+                    <path d="M 134 13 C 145 13 153 15 155 16 C 157 17 157 19 156 22 L 154 29 C 153.5 31 152 31.5 149 31 C 144 30 139 29 135 29 C 127 29 123 34 121 41 C 120 47 123 51 130 51 C 132 51 134 50.5 135 50 L 137 44 H 129 C 127 44 126.5 43 127 40 L 128 36 C 128.5 34.5 129.5 34 131 34 H 151 C 153 34 154 35.5 153.5 38 L 148 60 C 147 63 145 64.5 141 65.5 C 136 66.5 131 67 126 67 C 109 67 101 57 104 40 C 107 22 118 13 134 13 Z"/>
+                    <!-- Letter O -->
+                    <path fill-rule="evenodd" d="M 189 13 C 206 13 215 23 212 40 C 209 57 197 67 180 67 C 163 67 154 57 157 40 C 160 23 172 13 189 13 Z M 187 28 C 180 28 176 33 175 40 C 174 47 177 52 183 52 C 190 52 194 47 195 40 C 196 33 193 28 187 28 Z"/>
+                  </g>
+                </svg>
+              </div>
               <div>
-                <span class="block text-[10px] font-extrabold uppercase tracking-wider text-blue-200">By JAGOCOFFEE</span>
-                <h4 class="font-display text-lg font-bold text-white leading-none">Drink</h4>
+                <span class="block text-[10px] font-extrabold uppercase tracking-wider text-blue-200">By Jagocoffee</span>
+                <h4 class="font-display text-lg font-bold text-white leading-none">Drink Coupon</h4>
               </div>
             </div>
-            <span class="px-2.5 py-1 rounded-lg bg-lego-green text-white font-mono text-xs font-extrabold shadow-sm">
+            <span class="px-2.5 py-1 rounded-lg bg-lego-green text-white font-mono text-xs font-extrabold shadow-sm shrink-0">
               1x USE
             </span>
           </div>
@@ -485,7 +514,7 @@
 
   <!-- FOOTER -->
   <footer class="text-center py-5 px-4 text-xs text-slate-500">
-    <p>Please note that only servers are autorized to tap <strong>"Redeem Coupon"</strong> button.</p>
+    <p>Kindly note that only servers are authorized to press <strong>"Redeem Coupon"</strong> button.</p>
   </footer>
 
   <!-- HIGH-Z-INDEX CONFIRMATION MODAL -->
@@ -526,10 +555,10 @@
     // 1. EVENT CONFIGURATION (Customize your party details here)
     // =========================================================
     const EVENT_CONFIG = {
-      childName: "Kava",
+      childName: "Arkanza",
       age: 3,
-      title: "Kava's 3rd Birthday Party!",
-      date: "Wednesday, 2 December, 2026",
+      title: "Arkanza's 3rd Birthday Party!",
+      date: "Wednesday, December 2nd, 2026",
       time: "4:30 PM",
       venue: "Paradise Park 3 D1-11",
       address: "Kids Play & Party Lounge"
